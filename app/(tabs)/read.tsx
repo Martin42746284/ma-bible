@@ -7,6 +7,7 @@ import { CATEGORIES } from "@/constants/books";
 import { BookCard } from "@/components/BookCard";
 import { SectionHeader } from "@/components/SectionHeader";
 import { Book } from "@/types/bible";
+import { typography, spacing } from "@/theme/typography";
 
 export default function Read() {
   const { theme } = useTheme();
@@ -15,25 +16,33 @@ export default function Read() {
   const [selected, setSelected] = useState<Book | null>(null);
 
   const filtered = useMemo(
-    () => testament ? books.filter(b => b.testament === testament) : books,
+    () => (testament ? books.filter((b) => b.testament === testament) : books),
     [books, testament]
   );
 
   if (selected) {
     return (
-      <ScrollView contentContainerStyle={{ padding: 16 }}>
-        <Pressable onPress={() => setSelected(null)}>
-          <Text style={{ color: theme.accent, marginBottom: 8 }}>← Retour</Text>
+      <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
+        <Pressable onPress={() => setSelected(null)} style={styles.backButton}>
+          <Text style={[styles.backText, { color: theme.accent }]}>← Retour</Text>
         </Pressable>
-        <SectionHeader title={selected.nom} subtitle={`${selected.chapitres.length} chapitres`} />
-        <View style={styles.grid}>
-          {selected.chapitres.map(c => (
+        <SectionHeader
+          title={selected.nom}
+          subtitle={`${selected.chapitres.length} chapitres`}
+        />
+        <View style={styles.chapterGrid}>
+          {selected.chapitres.map((c) => (
             <Pressable
               key={c.numero}
-              onPress={() => router.push(`/reader/${encodeURIComponent(selected.nom)}/${c.numero}` as any)}
-              style={[styles.chip, { backgroundColor: theme.surface, borderColor: theme.border }]}
+              onPress={() =>
+                router.push(`/reader/${encodeURIComponent(selected.nom)}/${c.numero}` as any)
+              }
+              style={[
+                styles.chapterChip,
+                { backgroundColor: theme.primary, borderColor: theme.primaryDark },
+              ]}
             >
-              <Text style={{ color: theme.text, fontWeight: "700" }}>{c.numero}</Text>
+              <Text style={[styles.chapterNum, { color: theme.textInverse }]}>{c.numero}</Text>
             </Pressable>
           ))}
         </View>
@@ -41,19 +50,35 @@ export default function Read() {
     );
   }
 
+  const title =
+    testament === "nouveau"
+      ? "Nouveau Testament"
+      : testament === "ancien"
+        ? "Ancien Testament"
+        : "Tous les livres";
+
   return (
-    <ScrollView contentContainerStyle={{ padding: 16 }}>
-      <SectionHeader title={testament === "nouveau" ? "Nouveau Testament" : testament === "ancien" ? "Ancien Testament" : "Tous les livres"} />
-      {CATEGORIES.map(cat => {
-        const list = filtered.filter(b => cat.books.includes(b.nom));
+    <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
+      <SectionHeader title={title} />
+      {CATEGORIES.map((cat) => {
+        const list = filtered.filter((b) => cat.books.includes(b.nom));
         if (!list.length) return null;
         return (
-          <View key={cat.label} style={{ marginBottom: 16 }}>
-            <Text style={{ color: theme.textMuted, fontSize: 12, fontWeight: "700", letterSpacing: 1, marginBottom: 8 }}>
+          <View key={cat.label} style={styles.categorySection}>
+            <Text
+              style={[styles.categoryLabel, { color: theme.textSecondary }]}
+            >
               {cat.label.toUpperCase()}
             </Text>
-            <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
-              {list.map(b => <BookCard key={b.nom} name={b.nom} abrev={b.abrev} onPress={() => setSelected(b)} />)}
+            <View style={styles.booksGrid}>
+              {list.map((b) => (
+                <BookCard
+                  key={b.nom}
+                  name={b.nom}
+                  abrev={b.abrev}
+                  onPress={() => setSelected(b)}
+                />
+              ))}
             </View>
           </View>
         );
@@ -63,6 +88,46 @@ export default function Read() {
 }
 
 const styles = StyleSheet.create({
-  grid: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
-  chip: { width: 52, height: 52, borderRadius: 12, borderWidth: StyleSheet.hairlineWidth, alignItems: "center", justifyContent: "center" },
+  container: {
+    padding: spacing[4],
+    paddingTop: spacing[6],
+    paddingBottom: spacing[8],
+  },
+  backButton: {
+    marginBottom: spacing[4],
+  },
+  backText: {
+    fontSize: typography.base,
+    fontWeight: "600",
+  },
+  categorySection: {
+    marginBottom: spacing[6],
+  },
+  categoryLabel: {
+    fontSize: typography.xs,
+    fontWeight: "700",
+    letterSpacing: 1.5,
+    marginBottom: spacing[3],
+  },
+  booksGrid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+  },
+  chapterGrid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: spacing[2],
+  },
+  chapterChip: {
+    width: 56,
+    height: 56,
+    borderRadius: 12,
+    borderWidth: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  chapterNum: {
+    fontSize: typography.base,
+    fontWeight: "700",
+  },
 });

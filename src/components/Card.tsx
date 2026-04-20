@@ -1,15 +1,40 @@
 import React from "react";
 import { View, ViewProps, StyleSheet } from "react-native";
-import { useTheme } from "@/theme/ThemeProvider";
+import { useTheme, shadows } from "@/theme/ThemeProvider";
 
-export const Card: React.FC<ViewProps> = ({ style, children, ...p }) => {
+interface CardProps extends ViewProps {
+  variant?: "default" | "elevated" | "outlined";
+}
+
+export const Card: React.FC<CardProps> = ({ style, children, variant = "default", ...p }) => {
   const { theme } = useTheme();
+
+  const variants = {
+    default: {
+      backgroundColor: theme.surface,
+      borderColor: theme.borderLight,
+      borderWidth: StyleSheet.hairlineWidth,
+      ...shadows.sm,
+    },
+    elevated: {
+      backgroundColor: theme.surface,
+      borderColor: theme.borderLight,
+      borderWidth: 0,
+      ...shadows.md,
+    },
+    outlined: {
+      backgroundColor: "transparent",
+      borderColor: theme.border,
+      borderWidth: 1,
+    },
+  };
+
   return (
     <View
       {...p}
       style={[
         styles.card,
-        { backgroundColor: theme.surface, borderColor: theme.border },
+        variants[variant],
         style,
       ]}
     >
@@ -20,8 +45,8 @@ export const Card: React.FC<ViewProps> = ({ style, children, ...p }) => {
 
 const styles = StyleSheet.create({
   card: {
-    borderRadius: 18, borderWidth: StyleSheet.hairlineWidth, padding: 18,
-    shadowColor: "#000", shadowOpacity: 0.06, shadowRadius: 12, shadowOffset: { width: 0, height: 4 },
-    elevation: 2,
+    borderRadius: 16,
+    padding: 16,
+    overflow: "hidden",
   },
 });

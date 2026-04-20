@@ -3,8 +3,9 @@ import { View, Text, FlatList, Pressable, StyleSheet, Alert } from "react-native
 import { router } from "expo-router";
 import * as Sharing from "expo-sharing";
 import * as FileSystem from "expo-file-system";
-import { useTheme } from "@/theme/ThemeProvider";
+import { useTheme, shadows } from "@/theme/ThemeProvider";
 import { useBookmarks } from "@/hooks/useBookmarks";
+import { typography, spacing } from "@/theme/typography";
 
 const TABS = ["Tous", "Récents", "Catégories"] as const;
 
@@ -23,40 +24,82 @@ export default function Favorites() {
     const path = FileSystem.cacheDirectory + "favoris.json";
     await FileSystem.writeAsStringAsync(path, JSON.stringify(bookmarks, null, 2));
     if (await Sharing.isAvailableAsync()) await Sharing.shareAsync(path);
-    else Alert.alert("Export", path);
+    else Alert.alert("Export", "Fichier préparé : " + path);
   };
 
   return (
-    <View style={{ flex: 1, padding: 16 }}>
-      <View style={{ flexDirection: "row", gap: 8 }}>
-        {TABS.map(t => (
-          <Pressable key={t} onPress={() => setTab(t)}
-            style={[styles.tab, { borderColor: theme.border, backgroundColor: tab===t ? theme.primary : "transparent" }]}>
-            <Text style={{ color: tab===t ? theme.bg : theme.text }}>{t}</Text>
+    <View style={[styles.container, { backgroundColor: theme.bg }]}>
+      {/* Tabs */}
+      <View style={[styles.tabsContainer, { borderBottomColor: theme.border }]}>
+        <View style={styles.tabsScroll}>
+          {TABS.map((t) => (
+            <Pressable
+              key={t}
+              onPress={() => setTab(t)}
+              style={[
+                styles.tab,
+                {
+                  borderBottomColor: tab === t ? theme.primary : "transparent",
+                  borderBottomWidth: tab === t ? 3 : 0,
+                },
+              ]}
+            >
+              <Text
+                style={[
+                  styles.tabText,
+                  { color: tab === t ? theme.primary : theme.textSecondary },
+                ]}
+              >
+                {t}
+              </Text>
+            </Pressable>
+          ))}
+          <Pressable
+            onPress={exportJson}
+            style={[styles.tab, { marginLeft: "auto" }]}
+          >
+            <Text style={[styles.tabText, { color: theme.accent }]}>⬇ Exporter</Text>
           </Pressable>
-        ))}
-        <Pressable onPress={exportJson} style={[styles.tab, { borderColor: theme.accent }]}>
-          <Text style={{ color: theme.accent }}>Exporter</Text>
-        </Pressable>
+        </View>
       </View>
 
+      {/* Empty state */}
       {bookmarks.length === 0 ? (
-        <Text style={{ color: theme.textMuted, marginTop: 24 }}>Aucun favori pour l'instant.</Text>
+        <View style={styles.emptyContainer}>
+          <Text style={[styles.emptyIcon]}>☆</Text>
+          <Text style={[styles.emptyText, { color: theme.textSecondary }]}>
+            Aucun favori pour l'instant
+          </Text>
+          <Text style={[styles.emptySubtext, { color: theme.textTertiary }]}>
+            Appuyez sur un verset pour le sauvegarder
+          </Text>
+        </View>
       ) : (
         <FlatList
           data={data}
           keyExtractor={(b) => b.id}
-          contentContainerStyle={{ paddingTop: 12 }}
+          contentContainerStyle={styles.listContent}
           renderItem={({ item }) => (
             <Pressable
               onLongPress={() => remove(item.id)}
-              onPress={() => router.push(`/reader/${encodeURIComponent(item.book)}/${item.chapter}` as any)}
-              style={[styles.row, { borderColor: theme.border }]}
+              onPress={() =>
+                router.push(`/reader/${encodeURIComponent(item.book)}/${item.chapter}` as any)
+              }
+              style={[styles.bookmarkCard, { backgroundColor: theme.surface }, shadows.sm]}
             >
-              <Text style={{ color: theme.accent, fontWeight: "700" }}>{item.book} {item.chapter}:{item.verse}</Text>
-              <Text style={{ color: theme.text, marginTop: 4 }} numberOfLines={2}>{item.text}</Text>
-              <Text style={{ color: theme.textMuted, fontSize: 12, marginTop: 4 }}>
-                {new Date(item.addedAt).toLocaleDateString()}
+              <View style={styles.bookmarkHeader}>
+                <Text style={[styles.bookmarkRef, { color: theme.accent }]}>
+                  {item.book} {item.chapter}:{item.verse}
+                </Text>
+                <Text style={[styles.bookmarkDate, { color: theme.textTertiary }]}>
+                  {new Date(item.addedAt).toLocaleDateString("fr-FR")}
+                </Text>
+              </View>
+              <Text
+                style={[styles.bookmarkText, { color: theme.text }]}
+                numberOfLines={3}
+              >
+                {item.text}
               </Text>
             </Pressable>
           )}
@@ -65,7 +108,71 @@ export default function Favorites() {
     </View>
   );
 }
+
 const styles = StyleSheet.create({
-  tab: { paddingHorizontal: 14, paddingVertical: 8, borderRadius: 999, borderWidth: StyleSheet.hairlineWidth },
-  row: { paddingVertical: 12, borderBottomWidth: StyleSheet.hairlineWidth },
+  container: {
+    flex: 1,
+  },
+  tabsContainer: {
+    borderBottomWidth: StyleSheet.hairlineWidth,
+  },
+  tabsScroll: {
+    flexDirection: "row",
+    paddingHorizontal: spacing[4],
+  },
+  tab: {
+    paddingVertical: spacing[4],
+    paddingHorizontal: spacing[3],
+    marginRight: spacing[2],
+  },
+  tabText: {
+    fontSize: typography.sm,
+    fontWeight: "600",
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: spacing[4],
+  },
+  emptyIcon: {
+    fontSize: 48,
+    marginBottom: spacing[3],
+  },
+  emptyText: {
+    fontSize: typography.lg,
+    fontWeight: "700",
+    marginBottom: spacing[2],
+  },
+  emptySubtext: {
+    fontSize: typography.base,
+    textAlign: "center",
+  },
+  listContent: {
+    paddingHorizontal: spacing[4],
+    paddingVertical: spacing[4],
+    gap: spacing[3],
+  },
+  bookmarkCard: {
+    borderRadius: 14,
+    padding: spacing[4],
+    marginBottom: spacing[2],
+  },
+  bookmarkHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: spacing[2],
+  },
+  bookmarkRef: {
+    fontSize: typography.sm,
+    fontWeight: "700",
+  },
+  bookmarkDate: {
+    fontSize: typography.xs,
+  },
+  bookmarkText: {
+    fontSize: typography.base,
+    lineHeight: typography.base * 1.6,
+  },
 });

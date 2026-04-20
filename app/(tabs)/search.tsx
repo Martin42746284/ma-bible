@@ -1,9 +1,10 @@
 import React, { useMemo, useState } from "react";
 import { View, Text, TextInput, FlatList, Pressable, StyleSheet } from "react-native";
 import { router } from "expo-router";
-import { useTheme } from "@/theme/ThemeProvider";
+import { useTheme, shadows } from "@/theme/ThemeProvider";
 import { useDebounced } from "@/utils/debounce";
 import { search } from "@/services/searchService";
+import { typography, spacing } from "@/theme/typography";
 
 const FILTERS = [
   { key: "all", label: "Tout" },
@@ -22,51 +23,150 @@ export default function Search() {
     if (!dq) return text;
     const parts = text.split(new RegExp(`(${dq})`, "ig"));
     return parts.map((p, i) =>
-      p.toLowerCase() === dq.toLowerCase()
-        ? <Text key={i} style={{ backgroundColor: theme.bookmark, color: theme.text }}>{p}</Text>
-        : <Text key={i}>{p}</Text>
+      p.toLowerCase() === dq.toLowerCase() ? (
+        <Text key={i} style={[styles.highlight, { backgroundColor: theme.bookmark }]}>
+          {p}
+        </Text>
+      ) : (
+        <Text key={i}>{p}</Text>
+      )
     );
   };
 
   return (
-    <View style={{ flex: 1, padding: 16 }}>
-      <TextInput
-        value={q} onChangeText={setQ}
-        placeholder="Rechercher dans la Bible…"
-        placeholderTextColor={theme.textMuted}
-        style={[styles.input, { color: theme.text, borderColor: theme.border, backgroundColor: theme.surface }]}
-      />
-      <View style={{ flexDirection: "row", gap: 8, marginTop: 10 }}>
-        {FILTERS.map(f => (
-          <Pressable key={f.key} onPress={() => setFilter(f.key)}
-            style={[styles.chip, { borderColor: theme.border, backgroundColor: filter===f.key ? theme.primary : "transparent" }]}>
-            <Text style={{ color: filter===f.key ? theme.bg : theme.text }}>{f.label}</Text>
-          </Pressable>
-        ))}
+    <View style={[styles.container, { backgroundColor: theme.bg }]}>
+      <View style={styles.header}>
+        <View style={[styles.inputContainer, { backgroundColor: theme.surface }, shadows.sm]}>
+          <TextInput
+            value={q}
+            onChangeText={setQ}
+            placeholder="Rechercher…"
+            placeholderTextColor={theme.textTertiary}
+            style={[styles.input, { color: theme.text }]}
+          />
+        </View>
+
+        <View style={styles.filterRow}>
+          {FILTERS.map((f) => (
+            <Pressable
+              key={f.key}
+              onPress={() => setFilter(f.key)}
+              style={[
+                styles.filter,
+                {
+                  backgroundColor: filter === f.key ? theme.primary : theme.surface,
+                  borderColor: filter === f.key ? theme.primary : theme.border,
+                },
+              ]}
+            >
+              <Text
+                style={[
+                  styles.filterText,
+                  { color: filter === f.key ? theme.textInverse : theme.text },
+                ]}
+              >
+                {f.label}
+              </Text>
+            </Pressable>
+          ))}
+        </View>
+
+        <Text style={[styles.resultCount, { color: theme.textSecondary }]}>
+          {dq.length < 2 ? "Tapez au moins 2 caractères." : `${results.length} résultat(s)`}
+        </Text>
       </View>
-      <Text style={{ color: theme.textMuted, marginVertical: 10 }}>
-        {dq.length < 2 ? "Tapez au moins 2 caractères." : `${results.length} résultat(s)`}
-      </Text>
+
+      {results.length === 0 && dq.length >= 2 && (
+        <View style={styles.empty}>
+          <Text style={[styles.emptyText, { color: theme.textSecondary }]}>
+            Aucun résultat trouvé
+          </Text>
+        </View>
+      )}
+
       <FlatList
         data={results}
         keyExtractor={(r) => `${r.book}-${r.chapter}-${r.verse}`}
         renderItem={({ item }) => (
           <Pressable
             onPress={() => router.push(`/reader/${encodeURIComponent(item.book)}/${item.chapter}` as any)}
-            style={[styles.row, { borderColor: theme.border }]}
+            style={[styles.result, { borderColor: theme.border }]}
           >
-            <Text style={{ color: theme.accent, fontWeight: "700", marginBottom: 4 }}>
+            <Text style={[styles.resultRef, { color: theme.accent }]}>
               {item.book} {item.chapter}:{item.verse}
             </Text>
-            <Text style={{ color: theme.text }}>{renderHighlight(item.text)}</Text>
+            <Text style={[styles.resultText, { color: theme.text }]}>
+              {renderHighlight(item.text)}
+            </Text>
           </Pressable>
         )}
+        scrollEnabled={results.length > 0}
       />
     </View>
   );
 }
+
 const styles = StyleSheet.create({
-  input: { borderWidth: StyleSheet.hairlineWidth, borderRadius: 12, padding: 14, fontSize: 16 },
-  chip: { paddingHorizontal: 14, paddingVertical: 8, borderRadius: 999, borderWidth: StyleSheet.hairlineWidth },
-  row: { paddingVertical: 12, borderBottomWidth: StyleSheet.hairlineWidth },
+  container: {
+    flex: 1,
+  },
+  header: {
+    paddingHorizontal: spacing[4],
+    paddingTop: spacing[4],
+    paddingBottom: spacing[3],
+  },
+  inputContainer: {
+    borderRadius: 14,
+    overflow: "hidden",
+    marginBottom: spacing[3],
+  },
+  input: {
+    fontSize: typography.base,
+    paddingHorizontal: spacing[4],
+    paddingVertical: spacing[3],
+  },
+  filterRow: {
+    flexDirection: "row",
+    gap: spacing[2],
+    marginBottom: spacing[3],
+  },
+  filter: {
+    paddingHorizontal: spacing[3],
+    paddingVertical: spacing[2],
+    borderRadius: 999,
+    borderWidth: StyleSheet.hairlineWidth,
+  },
+  filterText: {
+    fontSize: typography.sm,
+    fontWeight: "600",
+  },
+  resultCount: {
+    fontSize: typography.sm,
+    fontWeight: "500",
+  },
+  empty: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  emptyText: {
+    fontSize: typography.base,
+  },
+  result: {
+    paddingVertical: spacing[4],
+    paddingHorizontal: spacing[4],
+    borderBottomWidth: StyleSheet.hairlineWidth,
+  },
+  resultRef: {
+    fontSize: typography.sm,
+    fontWeight: "700",
+    marginBottom: spacing[1],
+  },
+  resultText: {
+    fontSize: typography.base,
+    lineHeight: typography.base * 1.5,
+  },
+  highlight: {
+    fontWeight: "700",
+  },
 });
