@@ -1,0 +1,28 @@
+{
+  "expo": {
+    "name": "Ma Bible",
+    "slug": "ma-bible",
+    "scheme": "mabible",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.mabible.app"
+    },
+    "android": {
+      "package": "com.mabible.app"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-font"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "assetBundlePatterns": [
+      "assets/**/*"
+    ]
+  }
+}
