@@ -26,26 +26,71 @@ export default function Home() {
       <SectionHeader title="Ma Bible" subtitle="Louis Segond 1910" />
 
       {/* Verset du jour */}
-      <Card variant="elevated" style={styles.verseCard}>
-        <Text style={[styles.verseLabel, { color: theme.accent }]}>VERSET DU JOUR</Text>
-        <Text style={[styles.verseText, { color: theme.text, fontFamily: fonts.serif }]}>
+      <View
+        style={[
+          styles.verseCard,
+          {
+            backgroundColor: theme.primary,
+          },
+          shadows.lg,
+        ]}
+      >
+        <Text style={[styles.verseLabel, { color: theme.primaryLight }]}>
+          ✨ VERSET DU JOUR
+        </Text>
+        <Text
+          style={[
+            styles.verseText,
+            { color: theme.textInverse, fontFamily: fonts.serif },
+          ]}
+        >
           « {vod.text} »
         </Text>
-        <Text style={[styles.verseRef, { color: theme.textSecondary }]}>
+        <Text
+          style={[
+            styles.verseRef,
+            { color: theme.primaryLight },
+          ]}
+        >
           {vod.book} {vod.chapter}:{vod.verse}
         </Text>
-      </Card>
+      </View>
 
       {/* Reprendre la lecture */}
       {last && (
-        <Pressable onPress={() => router.push(`/reader/${encodeURIComponent(last.book)}/${last.chapter}` as any)}>
-          <Card variant="default" style={styles.resumeCard}>
-            <Text style={[styles.resumeLabel, { color: theme.textSecondary }]}>Reprendre la lecture</Text>
-            <Text style={[styles.resumeTitle, { color: theme.text }]}>
-              {last.book} {last.chapter}
-            </Text>
-            <View style={[styles.resumeArrow, { backgroundColor: theme.primary }]} />
-          </Card>
+        <Pressable
+          onPress={() =>
+            router.push(`/reader/${encodeURIComponent(last.book)}/${last.chapter}` as any)
+          }
+        >
+          <View
+            style={[
+              styles.resumeCard,
+              { backgroundColor: theme.surface },
+              shadows.md,
+            ]}
+          >
+            <View style={styles.resumeContent}>
+              <View>
+                <Text
+                  style={[styles.resumeLabel, { color: theme.textSecondary }]}
+                >
+                  📌 Reprendre la lecture
+                </Text>
+                <Text style={[styles.resumeTitle, { color: theme.text }]}>
+                  {last.book} {last.chapter}
+                </Text>
+              </View>
+              <View
+                style={[
+                  styles.resumeArrow,
+                  { backgroundColor: theme.accent },
+                ]}
+              >
+                <Text style={styles.arrowText}>→</Text>
+              </View>
+            </View>
+          </View>
         </Pressable>
       )}
 
@@ -56,23 +101,35 @@ export default function Home() {
           style={{ flex: 1 }}
           onPress={() => router.push("/read?testament=ancien" as any)}
         >
-          <Card variant="elevated" style={[styles.testamentCard, { backgroundColor: theme.primary }]}>
+          <View style={[
+            styles.testamentCard,
+            { backgroundColor: theme.primary },
+            shadows.lg,
+          ]}>
+            <Text style={[styles.testamentIcon]}>📕</Text>
             <Text style={[styles.testamentKbd, { color: theme.textInverse }]}>AT</Text>
             <Text style={[styles.testamentLabel, { color: theme.textInverse }]}>
               Ancien Testament
             </Text>
-          </Card>
+            <Text style={[styles.testamentCount, { color: theme.primaryLight }]}>39 livres</Text>
+          </View>
         </Pressable>
         <Pressable
           style={{ flex: 1 }}
           onPress={() => router.push("/read?testament=nouveau" as any)}
         >
-          <Card variant="elevated" style={[styles.testamentCard, { backgroundColor: theme.primaryLight }]}>
+          <View style={[
+            styles.testamentCard,
+            { backgroundColor: theme.primaryLight },
+            shadows.lg,
+          ]}>
+            <Text style={[styles.testamentIcon]}>📗</Text>
             <Text style={[styles.testamentKbd, { color: theme.textInverse }]}>NT</Text>
             <Text style={[styles.testamentLabel, { color: theme.textInverse }]}>
               Nouveau Testament
             </Text>
-          </Card>
+            <Text style={[styles.testamentCount, { color: theme.primary }]}>27 livres</Text>
+          </View>
         </Pressable>
       </View>
 
@@ -107,7 +164,9 @@ const styles = StyleSheet.create({
 
   // Verset du jour
   verseCard: {
+    borderRadius: 16,
     paddingVertical: spacing[6],
+    paddingHorizontal: spacing[4],
   },
   verseLabel: {
     fontSize: typography.xs,
@@ -128,7 +187,11 @@ const styles = StyleSheet.create({
 
   // Reprendre la lecture
   resumeCard: {
-    paddingVertical: spacing[5],
+    borderRadius: 16,
+    paddingVertical: spacing[4],
+    paddingHorizontal: spacing[4],
+  },
+  resumeContent: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
@@ -143,11 +206,16 @@ const styles = StyleSheet.create({
     marginTop: spacing[1],
   },
   resumeArrow: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
+    width: 48,
+    height: 48,
+    borderRadius: 24,
     justifyContent: "center",
     alignItems: "center",
+  },
+  arrowText: {
+    fontSize: typography.xl,
+    fontWeight: "700",
+    color: "white",
   },
 
   // Accès rapide
@@ -164,8 +232,14 @@ const styles = StyleSheet.create({
   },
   testamentCard: {
     paddingVertical: spacing[5],
+    paddingHorizontal: spacing[4],
     justifyContent: "center",
     alignItems: "center",
+    borderRadius: 16,
+  },
+  testamentIcon: {
+    fontSize: 36,
+    marginBottom: spacing[2],
   },
   testamentKbd: {
     fontSize: typography.xs,
@@ -177,6 +251,11 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     marginTop: spacing[2],
     textAlign: "center",
+  },
+  testamentCount: {
+    fontSize: typography.xs,
+    marginTop: spacing[2],
+    fontWeight: "500",
   },
 
   // Statistiques

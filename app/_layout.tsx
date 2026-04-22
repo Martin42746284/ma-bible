@@ -12,10 +12,18 @@ function Inner() {
         headerStyle: { backgroundColor: theme.bg },
         headerTitleStyle: { color: theme.text, fontWeight: "700" },
         contentStyle: { backgroundColor: theme.bg },
+        headerTintColor: theme.text,
       }}>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="reader/[book]/[chapter]" options={{ title: "" }} />
-        <Stack.Screen name="settings" options={{ presentation: "modal", title: "Paramètres" }} />
+        <Stack.Screen
+          name="settings"
+          options={{
+            presentation: "modal",
+            title: "Paramètres",
+            headerShown: true,
+          }}
+        />
       </Stack>
     </>
   );

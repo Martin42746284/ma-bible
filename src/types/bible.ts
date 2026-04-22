@@ -10,6 +10,29 @@ export interface Book {
 }
 export interface Bible { livres: Book[]; }
 
+// Types pour segond_1910.json
+export interface BibleMetadata {
+  name: string;
+  shortname: string;
+  module: string;
+  year: string;
+  lang_short: string;
+  copyright_statement: string;
+}
+
+export interface RawVerse {
+  book_name: string;
+  book: number;
+  chapter: number;
+  verse: number;
+  text: string;
+}
+
+export interface SegondBible {
+  metadata: BibleMetadata;
+  verses: RawVerse[];
+}
+
 export interface Bookmark {
   id: string;
   book: string;
