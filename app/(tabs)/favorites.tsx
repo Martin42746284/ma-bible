@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { View, Text, FlatList, Pressable, StyleSheet, Alert } from "react-native";
+import { View, Text, FlatList, Pressable, StyleSheet, Alert, Platform } from "react-native";
 import { router } from "expo-router";
 import * as Sharing from "expo-sharing";
 import * as FileSystem from "expo-file-system";
@@ -21,10 +21,27 @@ export default function Favorites() {
   }, [bookmarks, tab]);
 
   const exportJson = async () => {
-    const path = FileSystem.cacheDirectory + "favoris.json";
-    await FileSystem.writeAsStringAsync(path, JSON.stringify(bookmarks, null, 2));
-    if (await Sharing.isAvailableAsync()) await Sharing.shareAsync(path);
-    else Alert.alert("Export", "Fichier préparé : " + path);
+    const jsonData = JSON.stringify(bookmarks, null, 2);
+
+    if (Platform.OS === "web") {
+      // Web: Utiliser le blob et télécharger
+      const blob = new Blob([jsonData], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "favoris.json";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      Alert.alert("Export", "Vos favoris ont été téléchargés");
+    } else {
+      // Native: Utiliser FileSystem
+      const path = FileSystem.cacheDirectory + "favoris.json";
+      await FileSystem.writeAsStringAsync(path, jsonData);
+      if (await Sharing.isAvailableAsync()) await Sharing.shareAsync(path);
+      else Alert.alert("Export", "Fichier préparé : " + path);
+    }
   };
 
   return (
