@@ -133,11 +133,11 @@ const styles = StyleSheet.create({
   chapterGrid: {
     flexDirection: "row",
     flexWrap: "wrap",
-    gap: spacing[2],
+    gap: spacing[4],
   },
   chapterChip: {
-    width: 56,
-    height: 56,
+    width: 58,
+    height: 58,
     borderRadius: 12,
     borderWidth: 1,
     alignItems: "center",
