@@ -98,12 +98,12 @@ export default function Favorites() {
           contentContainerStyle={styles.listContent}
           renderItem={({ item }) => (
             <Pressable
-              onLongPress={() => remove(item.id)}
-              onPress={() =>
-                router.push(`/reader/${encodeURIComponent(item.book)}/${item.chapter}` as any)
-              }
-              style={[styles.bookmarkCard, { backgroundColor: theme.surface }, shadows.sm]}
-            >
+            onLongPress={() => remove(item.id)}
+            onPress={() =>
+              router.push(`/reader/${encodeURIComponent(item.book)}/${item.chapter}` as any)
+            }
+            style={[styles.bookmarkCard, { backgroundColor: theme.surface }, shadows.md]}
+          >
               <View style={styles.bookmarkHeader}>
                 <Text style={[styles.bookmarkRef, { color: theme.accent }]}>
                   {item.book} {item.chapter}:{item.verse}

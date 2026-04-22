@@ -18,9 +18,11 @@ export default function Home() {
   const [days, setDays] = React.useState(0);
   React.useEffect(() => { getJSON<string[]>(KEYS.history, []).then((h) => setDays(h.length)); }, []);
 
+  const progressPercent = Math.min(100, Math.round((days / 365) * 100));
+
   return (
     <ScrollView
-      contentContainerStyle={styles.container}
+      contentContainerStyle={[styles.container, { backgroundColor: theme.bg }]}
       showsVerticalScrollIndicator={false}
     >
       <SectionHeader title="Ma Bible" subtitle="Louis Segond 1910" />
@@ -35,7 +37,7 @@ export default function Home() {
           shadows.lg,
         ]}
       >
-        <Text style={[styles.verseLabel, { color: theme.primaryLight }]}>
+        <Text style={[styles.verseLabel, { color: theme.textInverse }]}>
           ✨ VERSET DU JOUR
         </Text>
         <Text
@@ -49,7 +51,7 @@ export default function Home() {
         <Text
           style={[
             styles.verseRef,
-            { color: theme.primaryLight },
+            { color: theme.textInverse },
           ]}
         >
           {vod.book} {vod.chapter}:{vod.verse}
@@ -104,14 +106,17 @@ export default function Home() {
           <View style={[
             styles.testamentCard,
             { backgroundColor: theme.primary },
-            shadows.lg,
+            shadows.md,
           ]}>
-            <Text style={[styles.testamentIcon]}>📕</Text>
-            <Text style={[styles.testamentKbd, { color: theme.textInverse }]}>AT</Text>
-            <Text style={[styles.testamentLabel, { color: theme.textInverse }]}>
-              Ancien Testament
-            </Text>
-            <Text style={[styles.testamentCount, { color: theme.primaryLight }]}>39 livres</Text>
+            <View style={styles.testamentTop}>
+              <Text style={[styles.testamentIcon]}>📕</Text>
+            </View>
+            <View style={styles.testamentBottom}>
+              <Text style={[styles.testamentKbd, { color: theme.textInverse }]}>AT</Text>
+              <Text style={[styles.testamentLabel, { color: theme.textInverse }]}>
+                Ancien Testament
+              </Text>
+            </View>
           </View>
         </Pressable>
         <Pressable
@@ -120,15 +125,18 @@ export default function Home() {
         >
           <View style={[
             styles.testamentCard,
-            { backgroundColor: theme.primaryLight },
-            shadows.lg,
+            { backgroundColor: theme.primary },
+            shadows.md,
           ]}>
-            <Text style={[styles.testamentIcon]}>📗</Text>
-            <Text style={[styles.testamentKbd, { color: theme.textInverse }]}>NT</Text>
-            <Text style={[styles.testamentLabel, { color: theme.textInverse }]}>
-              Nouveau Testament
-            </Text>
-            <Text style={[styles.testamentCount, { color: theme.primary }]}>27 livres</Text>
+            <View style={styles.testamentTop}>
+              <Text style={[styles.testamentIcon]}>📗</Text>
+            </View>
+            <View style={styles.testamentBottom}>
+              <Text style={[styles.testamentKbd, { color: theme.textInverse }]}>NT</Text>
+              <Text style={[styles.testamentLabel, { color: theme.textInverse }]}>
+                Nouveau Testament
+              </Text>
+            </View>
           </View>
         </Pressable>
       </View>
@@ -138,7 +146,7 @@ export default function Home() {
       <View style={styles.statsRow}>
         <Stat label="Favoris" value={bookmarks.length} />
         <Stat label="Jours de lecture" value={days} />
-        <Stat label="Progression" value={`${Math.min(100, Math.round((days / 365) * 100))}%`} />
+        <Stat label="Progression" value={`${progressPercent}%`} />
       </View>
     </ScrollView>
   );
@@ -146,9 +154,22 @@ export default function Home() {
 
 const Stat = ({ label, value }: { label: string; value: number | string }) => {
   const { theme } = useTheme();
+  const isProgress = label === "Progression" && typeof value === "string";
+  const progressValue = isProgress ? parseInt(value as string) : 0;
+
   return (
     <Card variant="outlined" style={[styles.stat, { borderColor: theme.borderLight }]}>
       <Text style={[styles.statValue, { color: theme.text }]}>{value}</Text>
+      {isProgress && (
+        <View style={[styles.progressBar, { backgroundColor: theme.borderLight }]}>
+          <View
+            style={[
+              styles.progressFill,
+              { backgroundColor: theme.primary, width: `${progressValue}%` },
+            ]}
+          />
+        </View>
+      )}
       <Text style={[styles.statLabel, { color: theme.textSecondary }]}>{label}</Text>
     </Card>
   );
@@ -231,26 +252,33 @@ const styles = StyleSheet.create({
     gap: spacing[3],
   },
   testamentCard: {
-    paddingVertical: spacing[5],
-    paddingHorizontal: spacing[4],
+    borderRadius: 16,
+    overflow: "hidden",
+    justifyContent: "space-between",
+    height: 140,
+  },
+  testamentTop: {
+    flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    borderRadius: 16,
+  },
+  testamentBottom: {
+    paddingHorizontal: spacing[3],
+    paddingBottom: spacing[3],
   },
   testamentIcon: {
-    fontSize: 36,
-    marginBottom: spacing[2],
+    fontSize: 40,
   },
   testamentKbd: {
     fontSize: typography.xs,
     fontWeight: "800",
     letterSpacing: 2,
+    marginBottom: spacing[1],
   },
   testamentLabel: {
-    fontSize: typography.sm,
-    fontWeight: "700",
-    marginTop: spacing[2],
-    textAlign: "center",
+    fontSize: typography.xs,
+    fontWeight: "600",
+    textAlign: "left",
   },
   testamentCount: {
     fontSize: typography.xs,
@@ -272,6 +300,16 @@ const styles = StyleSheet.create({
   statValue: {
     fontSize: typography["2xl"],
     fontWeight: "800",
+  },
+  progressBar: {
+    height: 4,
+    borderRadius: 2,
+    marginTop: spacing[2],
+    overflow: "hidden",
+  },
+  progressFill: {
+    height: "100%",
+    borderRadius: 2,
   },
   statLabel: {
     fontSize: typography.xs,

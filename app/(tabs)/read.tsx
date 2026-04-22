@@ -20,16 +20,21 @@ export default function Read() {
     [books, testament]
   );
 
+  // Compute stats for selected book
+  const totalChapters = selected ? selected.chapitres.length : 0;
+
   if (selected) {
     return (
-      <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
+      <ScrollView contentContainerStyle={[styles.container, { backgroundColor: theme.bg }]} showsVerticalScrollIndicator={false}>
         <Pressable onPress={() => setSelected(null)} style={styles.backButton}>
           <Text style={[styles.backText, { color: theme.accent }]}>← Retour</Text>
         </Pressable>
-        <SectionHeader
-          title={selected.nom}
-          subtitle={`${selected.chapitres.length} chapitres`}
-        />
+        <View style={styles.bookHeader}>
+          <Text style={[styles.bookTitle, { color: theme.text }]}>{selected.nom}</Text>
+          <Text style={[styles.bookSubtitle, { color: theme.textSecondary }]}>
+            {selected.chapitres.length} chapitres
+          </Text>
+        </View>
         <View style={styles.chapterGrid}>
           {selected.chapitres.map((c) => (
             <Pressable
@@ -58,7 +63,7 @@ export default function Read() {
         : "Tous les livres";
 
   return (
-    <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
+    <ScrollView contentContainerStyle={[styles.container, { backgroundColor: theme.bg }]} showsVerticalScrollIndicator={false}>
       <SectionHeader title={title} />
       {CATEGORIES.map((cat) => {
         const list = filtered.filter((b) => cat.books.includes(b.nom));
@@ -66,7 +71,7 @@ export default function Read() {
         return (
           <View key={cat.label} style={styles.categorySection}>
             <Text
-              style={[styles.categoryLabel, { color: theme.textSecondary }]}
+              style={[styles.categoryLabel, { color: theme.text }]}
             >
               {cat.label.toUpperCase()}
             </Text>
@@ -99,6 +104,18 @@ const styles = StyleSheet.create({
   backText: {
     fontSize: typography.base,
     fontWeight: "600",
+  },
+  bookHeader: {
+    marginBottom: spacing[6],
+  },
+  bookTitle: {
+    fontSize: typography["2xl"],
+    fontWeight: "700",
+    marginBottom: spacing[1],
+  },
+  bookSubtitle: {
+    fontSize: typography.base,
+    fontWeight: "500",
   },
   categorySection: {
     marginBottom: spacing[6],

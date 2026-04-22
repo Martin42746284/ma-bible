@@ -77,6 +77,11 @@ export default function Reader() {
           />
         </View>
 
+        {/* Progress text */}
+        <Text style={[styles.progressText, { color: theme.textSecondary }]}>
+          Progression: {chNum} / {total}
+        </Text>
+
         {/* Verses */}
         <View style={styles.versesContainer}>
           {ch.versets.map((v) => {
@@ -179,6 +184,12 @@ const styles = StyleSheet.create({
   progressFill: {
     height: "100%",
     borderRadius: 2,
+  },
+  progressText: {
+    fontSize: typography.xs,
+    fontWeight: "600",
+    marginTop: spacing[2],
+    marginBottom: spacing[4],
   },
   versesContainer: {
     marginBottom: spacing[6],

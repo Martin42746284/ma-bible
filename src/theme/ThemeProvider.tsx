@@ -38,7 +38,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       fontSize: settings.fontSize,
       shadows,
     }),
-    [isDark, settings.fontSize]
+    [isDark, settings.theme, settings.fontSize, sys]
   );
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 };

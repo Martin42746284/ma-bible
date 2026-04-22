@@ -65,15 +65,17 @@ export default function Search() {
                   { color: filter === f.key ? theme.textInverse : theme.text },
                 ]}
               >
-                {f.label}
+                {f.label === "Tout" ? "Tous" : f.label}
               </Text>
             </Pressable>
           ))}
         </View>
 
-        <Text style={[styles.resultCount, { color: theme.textSecondary }]}>
-          {dq.length < 2 ? "Tapez au moins 2 caractères." : `${results.length} résultat(s)`}
-        </Text>
+        {dq.length >= 2 && (
+          <Text style={[styles.resultCount, { color: theme.textSecondary }]}>
+            {results.length} résultat{results.length > 1 ? "s" : ""}
+          </Text>
+        )}
       </View>
 
       {results.length === 0 && dq.length >= 2 && (
@@ -90,12 +92,12 @@ export default function Search() {
         renderItem={({ item }) => (
           <Pressable
             onPress={() => router.push(`/reader/${encodeURIComponent(item.book)}/${item.chapter}` as any)}
-            style={[styles.result, { borderColor: theme.border }]}
+            style={[styles.result, { borderColor: theme.border, backgroundColor: theme.surface }]}
           >
             <Text style={[styles.resultRef, { color: theme.accent }]}>
               {item.book} {item.chapter}:{item.verse}
             </Text>
-            <Text style={[styles.resultText, { color: theme.text }]}>
+            <Text style={[styles.resultText, { color: theme.text }]} numberOfLines={4}>
               {renderHighlight(item.text)}
             </Text>
           </Pressable>
@@ -156,15 +158,20 @@ const styles = StyleSheet.create({
     paddingVertical: spacing[4],
     paddingHorizontal: spacing[4],
     borderBottomWidth: StyleSheet.hairlineWidth,
+    marginHorizontal: spacing[3],
+    marginVertical: spacing[2],
+    borderRadius: 12,
+    borderBottomWidth: 0,
   },
   resultRef: {
     fontSize: typography.sm,
     fontWeight: "700",
-    marginBottom: spacing[1],
+    marginBottom: spacing[2],
   },
   resultText: {
     fontSize: typography.base,
     lineHeight: typography.base * 1.5,
+    color: "#666",
   },
   highlight: {
     fontWeight: "700",

@@ -27,7 +27,7 @@ export const VerseItem: React.FC<Props> = ({ num, text, bookmarked, onToggleBook
         styles.row,
         {
           backgroundColor: bookmarked ? theme.bookmark : "transparent",
-          opacity: pressed ? 0.8 : 1,
+          opacity: pressed ? 0.7 : 1,
         },
       ]}
     >
@@ -57,16 +57,16 @@ export const VerseItem: React.FC<Props> = ({ num, text, bookmarked, onToggleBook
 const styles = StyleSheet.create({
   row: {
     flexDirection: "row",
-    paddingVertical: 12,
-    paddingHorizontal: 14,
+    paddingVertical: 14,
+    paddingHorizontal: 16,
     borderRadius: 12,
-    marginVertical: 4,
+    marginVertical: 6,
   },
   numCol: {
-    width: 32,
+    width: 36,
     alignItems: "center",
     marginTop: 2,
-    marginRight: 8,
+    marginRight: 12,
   },
   num: {
     fontSize: typography.xs,
@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
   },
   star: {
     fontSize: typography.sm,
-    marginTop: 2,
+    marginTop: 4,
   },
   text: {
     flex: 1,

@@ -16,9 +16,9 @@ export const BookCard: React.FC<{ name: string; abrev: string; onPress: () => vo
         styles.card,
         {
           backgroundColor: pressed ? theme.primaryLight : theme.primary,
-          opacity: pressed ? 0.9 : 1,
+          opacity: pressed ? 0.8 : 1,
         },
-        shadows.sm,
+        shadows.md,
       ]}
     >
       <View style={styles.content}>
