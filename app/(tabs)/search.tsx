@@ -160,8 +160,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: StyleSheet.hairlineWidth,
     marginHorizontal: spacing[3],
     marginVertical: spacing[2],
-    borderRadius: 12,
-    borderBottomWidth: 0,
+    borderRadius: 12
   },
   resultRef: {
     fontSize: typography.sm,

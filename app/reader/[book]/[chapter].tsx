@@ -51,7 +51,7 @@ export default function Reader() {
         }}
       />
       <ScrollView
-        contentContainerStyle={[styles.content, { paddingBottom: spacing[20] }]}
+        contentContainerStyle={[styles.content, { paddingBottom: spacing[16] }]}
         showsVerticalScrollIndicator={false}
       >
         {/* Chapter header */}

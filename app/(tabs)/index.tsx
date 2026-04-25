@@ -25,7 +25,7 @@ export default function Home() {
       contentContainerStyle={[styles.container, { backgroundColor: theme.bg }]}
       showsVerticalScrollIndicator={false}
     >
-      <SectionHeader title="Ma Bible" subtitle="Louis Segond 1910" />
+      <SectionHeader title="Ma Bible" />
 
       {/* Verset du jour */}
       <View
@@ -112,7 +112,6 @@ export default function Home() {
               <Text style={[styles.testamentIcon]}>📕</Text>
             </View>
             <View style={styles.testamentBottom}>
-              <Text style={[styles.testamentKbd, { color: theme.textInverse }]}>AT</Text>
               <Text style={[styles.testamentLabel, { color: theme.textInverse }]}>
                 Ancien Testament
               </Text>
@@ -132,7 +131,6 @@ export default function Home() {
               <Text style={[styles.testamentIcon]}>📗</Text>
             </View>
             <View style={styles.testamentBottom}>
-              <Text style={[styles.testamentKbd, { color: theme.textInverse }]}>NT</Text>
               <Text style={[styles.testamentLabel, { color: theme.textInverse }]}>
                 Nouveau Testament
               </Text>
@@ -276,9 +274,9 @@ const styles = StyleSheet.create({
     marginBottom: spacing[1],
   },
   testamentLabel: {
-    fontSize: typography.xs,
+    fontSize: typography.sm,
     fontWeight: "600",
-    textAlign: "left",
+    textAlign: "center",
   },
   testamentCount: {
     fontSize: typography.xs,
@@ -289,6 +287,8 @@ const styles = StyleSheet.create({
   // Statistiques
   statsRow: {
     flexDirection: "row",
+    textAlign: "center",
+    fontSize: typography.sm,
     gap: spacing[3],
   },
   stat: {

@@ -22,7 +22,6 @@ export const BookCard: React.FC<{ name: string; abrev: string; onPress: () => vo
       ]}
     >
       <View style={styles.content}>
-        <Text style={[styles.abrev, { color: theme.textInverse }]}>{abrev}</Text>
         <Text style={[styles.name, { color: theme.textInverse }]} numberOfLines={2}>{name}</Text>
       </View>
     </Pressable>
@@ -53,5 +52,6 @@ const styles = StyleSheet.create({
     fontSize: typography.sm,
     fontWeight: "600",
     textAlign: "center",
+    letterSpacing: 4,
   },
 });

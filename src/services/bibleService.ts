@@ -1,6 +1,6 @@
 import { Bible, Book, SegondBible, RawVerse } from "@/types/bible";
 
-const rawData: SegondBible = require("../../segond_1910.json");
+const rawData: SegondBible = require("../../assets/bible.json");
 
 // Transformer les données du format verses en format livres/chapitres/versets
 const transformBibleData = (rawData: SegondBible): Bible => {
