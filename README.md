@@ -89,7 +89,3 @@ Voir https://docs.expo.dev/build/introduction/
 - Multilingue
 - Partage en image (`react-native-view-shot`)
 - Synchronisation cloud optionnelle
-
-## Licence
-
-Code MIT. Texte biblique : **Louis Segond 1910** (domaine public).
