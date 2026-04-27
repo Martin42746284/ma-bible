@@ -88,4 +88,4 @@ Voir https://docs.expo.dev/build/introduction/
 - Notes personnelles
 - Multilingue
 - Partage en image (`react-native-view-shot`)
-- Synchronisation cloud optionnelle
+- Synchronisation cloud
