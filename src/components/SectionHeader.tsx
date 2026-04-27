@@ -21,11 +21,11 @@ const styles = StyleSheet.create({
     fontSize: typography["3xl"],
     fontWeight: "700",
     letterSpacing: -0.5,
-    marginBottom: 4,
     textAlign: "center",
   },
   sub: {
     fontSize: typography.base,
+    textAlign: "center",
     fontWeight: "500",
     lineHeight: typography.normal * typography.base,
   },

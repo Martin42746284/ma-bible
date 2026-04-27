@@ -25,7 +25,7 @@ export default function Home() {
       contentContainerStyle={[styles.container, { backgroundColor: theme.bg }]}
       showsVerticalScrollIndicator={false}
     >
-      <SectionHeader title="Ma Bible" />
+      <SectionHeader title="Ma Bible"/>
 
       {/* Verset du jour */}
       <View
