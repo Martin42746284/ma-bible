@@ -33,6 +33,7 @@ export default function TabsLayout() {
         headerStyle: { backgroundColor: theme.bg },
         headerTitleStyle: { color: theme.text, fontWeight: "700" },
         headerShown: true,
+        contentStyle: { backgroundColor: theme.bg },
         tabBarStyle: [
           {
             backgroundColor: theme.surface,

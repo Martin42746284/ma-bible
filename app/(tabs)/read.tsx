@@ -25,7 +25,7 @@ export default function Read() {
 
   if (selected) {
     return (
-      <ScrollView contentContainerStyle={[styles.container, { backgroundColor: theme.bg }]} showsVerticalScrollIndicator={false}>
+      <ScrollView style={{ backgroundColor: theme.bg }} contentContainerStyle={[styles.container, { backgroundColor: theme.bg }]} showsVerticalScrollIndicator={false}>
         <Pressable onPress={() => setSelected(null)} style={styles.backButton}>
           <Text style={[styles.backText, { color: theme.accent }]}>← Retour</Text>
         </Pressable>
@@ -63,7 +63,7 @@ export default function Read() {
         : "Tous les livres";
 
   return (
-    <ScrollView contentContainerStyle={[styles.container, { backgroundColor: theme.bg }]} showsVerticalScrollIndicator={false}>
+    <ScrollView style={{ backgroundColor: theme.bg }} contentContainerStyle={[styles.container, { backgroundColor: theme.bg }]} showsVerticalScrollIndicator={false}>
       <SectionHeader title={title} />
       {CATEGORIES.map((cat) => {
         const list = filtered.filter((b) => cat.books.includes(b.nom));
